@@ -1,33 +1,41 @@
-
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
 require('./bootstrap');
+// アイコンの読み込み
+require("./fontawesome");
 
 window.Vue = require('vue');
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+Vue.component('navbar', require('./components/Navbar.vue').default);
 
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
+import Vue from 'vue'
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// VeeValidationの設定 --start
+import { extend, ValidationProvider, ValidationObserver, localize } from 'vee-validate';
+// import { required } from 'vee-validate/dist/rules';
+import * as rules from 'vee-validate/dist/rules' // 全てのバリデーションルール
+import ja from 'vee-validate/dist/locale/ja.json';
+// forループで全てのバリデーションルールをextendで登録する
+for (let rule in rules) {
+    extend(rule, {
+        ...rules[rule], // add the rule
+        message: ja.messages[rule] // 日本語メッセージを登録
+    });
+}
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver); // 入力エラー時のボタンへdisabledを設定する時に使える
+localize({ ja });
+// VeeValidationの設定 --end
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+// ツールチップ --start
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
+// ツールチップ --end
+
+// ルーティングの定義をインポートする
+import router from './router'
+
+
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    router,
 });
