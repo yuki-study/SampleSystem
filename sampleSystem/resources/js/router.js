@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 
 // ページコンポーネントをインポートする
 import Main from './components/Main.vue'
-import Login from './components/Login.vue'
 import TaxCalculation from './components/TaxCalculation.vue'
 
 // VueRouterプラグインを使用する

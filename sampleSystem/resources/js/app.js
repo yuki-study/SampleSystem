@@ -4,7 +4,7 @@ require("./fontawesome");
 
 window.Vue = require('vue');
 
-Vue.component('navbar', require('./components/Navbar.vue').default);
+// Vue.component('navbar', require('./components/Navbar.vue').default);
 
 import Vue from 'vue'
 
@@ -30,12 +30,19 @@ import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)
 // ツールチップ --end
 
+// トースター（エラーメッセージ表示などに使う） --start
+import Toasted from 'vue-toasted'
+Vue.use(Toasted)
+// トースター（エラーメッセージ表示などに使う） --end
+
+import App from './App.vue'
+
 // ルーティングの定義をインポートする
 import router from './router'
-
-
 
 const app = new Vue({
     el: '#app',
     router,
+    components: { App },
+    template: '<App />'
 });

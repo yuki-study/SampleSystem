@@ -30,6 +30,7 @@
         "browser-sync": "^2.26.13",
         "browser-sync-webpack-plugin": "^2.3.0",
         "v-tooltip": "^2.1.2",
-        "vee-validate": "^3.4.5"
+        "vee-validate": "^3.4.5",
+        "vue-toasted": "^1.1.28"
     }
 }

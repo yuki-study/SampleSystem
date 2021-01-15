@@ -13,11 +13,7 @@
 
  <body>
      <div id="app">
-         <navbar></navbar>
-         <!-- 子コンポーネントの切り替え時にフォーム内容をキャッシュする -->
-         <keep-alive>
-             <router-view></router-view>
-         </keep-alive>
+
      </div>
      <!-- Scripts webpack.mix.jsでビルドしたファイルの読み込み-->
      <script src="{{ mix('/js/app.js') }}" defer></script>
