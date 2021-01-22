@@ -26,6 +26,7 @@
 
  <script>
 export default {
+  name: "Stady",
   data() {
     return {
       email: null,

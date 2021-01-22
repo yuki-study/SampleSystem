@@ -578,6 +578,7 @@ import mixin from "../mixin";
 
 export default {
   mixins: [mixin],
+  name: "TaxCalculation",
   data() {
     return {
       tax: {

@@ -6530,8 +6530,92 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6621,9 +6705,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "news",
+  name: "Cryptocurrency",
   data: function data() {
     return {
+      criteriaBinanceDatas: null,
       binanceDatas: [],
       errors: [],
       date: null,
@@ -6639,37 +6724,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         bidPrice: "価格",
         quoteVolume: "出来高"
       },
+      volumeBtc: 0,
       intervalId: undefined
     };
   },
   created: function created() {
     this.$store.commit("setIsActive", 3);
   },
-  watch: _defineProperty({
+  watch: {
     $route: function $route(to, from) {
       if (to.path !== from.path) {
+        console.log("clearInterval");
         this.$clearInterval(this.intervalId); //ページ遷移時に定期処理を解除
       }
     }
-  }, "$route", function $route(to) {
-    var _this = this;
-
-    // 別ページから仮想通貨ページに遷移した時に定期処理実行;
-    if (to.path === "/cryptocurrency") {
-      var i = 0;
-      this.intervalId = this.$setInterval(function () {
-        console.log("定期実行API_route" + i);
-        i = i + 1;
-
-        _this.getDateTeiki();
-      }, 10000);
-    }
-  }),
+  },
   computed: {
     filterSortBtc: function filterSortBtc() {
-      var _this2 = this;
+      var _this = this;
 
-      var data = this.binanceDatas["BTC"]; // ソート処理
+      var data = this.binanceDatas["BTC"];
+      var datas = [];
+
+      if (this.volumeBtc) {
+        data.forEach(function (value, key) {
+          if (value["quoteVolume"] >= _this.volumeBtc) {
+            datas.push(value);
+          }
+        });
+        data = datas;
+      } // ソート処理
+
 
       if (this.sortBtcKey) {
         var set = 1;
@@ -6677,8 +6762,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         if (data) {
           data.sort(function (a, b) {
-            if (a[_this2.sortBtcKey] < b[_this2.sortBtcKey]) return -1 * set;
-            if (a[_this2.sortBtcKey] > b[_this2.sortBtcKey]) return 1 * set;
+            if (a[_this.sortBtcKey] < b[_this.sortBtcKey]) return -1 * set;
+            if (a[_this.sortBtcKey] > b[_this.sortBtcKey]) return 1 * set;
             return 0;
           });
         }
@@ -6687,7 +6772,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return data;
     },
     filterSortUsdt: function filterSortUsdt() {
-      var _this3 = this;
+      var _this2 = this;
 
       var data = this.binanceDatas["USDT"]; // ソート処理
 
@@ -6697,8 +6782,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         if (data) {
           data.sort(function (a, b) {
-            if (a[_this3.sortUsdtKey] < b[_this3.sortUsdtKey]) return -1 * set;
-            if (a[_this3.sortUsdtKey] > b[_this3.sortUsdtKey]) return 1 * set;
+            if (a[_this2.sortUsdtKey] < b[_this2.sortUsdtKey]) return -1 * set;
+            if (a[_this2.sortUsdtKey] > b[_this2.sortUsdtKey]) return 1 * set;
             return 0;
           });
         }
@@ -6707,7 +6792,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return data;
     }
   },
-  methods: _defineProperty({
+  methods: {
     sortBtc: function sortBtc(key) {
       this.sortBtcKey === key ? this.sortUsdtAsc = !this.sortUsdtAsc : this.sortUsdtAsc = true;
       this.sortUsdtKey = key;
@@ -6715,6 +6800,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     sortUsdt: function sortUsdt(key) {
       this.sortUsdtKey === key ? this.sortUsdtAsc = !this.sortUsdtAsc : this.sortUsdtAsc = true;
       this.sortUsdtKey = key;
+    },
+    clickBinance: function clickBinance() {
+      var _this3 = this;
+
+      this.$clearInterval(this.intervalId); //ページ遷移時に定期処理を解除
+      // １回目のデータ取得ができたら定期実行処理
+
+      if (this.getDate()) {
+        var i = 0;
+        this.intervalId = this.$setInterval(function () {
+          console.log("定期実行API_clickBinance" + i);
+          i = i + 1;
+
+          _this3.getDate();
+        }, 10000);
+      }
     },
     // APIからデータ取得
     getDate: function getDate() {
@@ -6749,7 +6850,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               case 0:
                 _context2.next = 2;
                 return axios.get("/api/crypto").then(function (res) {
-                  _this5.binanceDatas = res.data;
+                  _this5.binanceDatas = res.data; // 初回のみ登録する
+
+                  if (_this5.criteriaBinanceDatas === null) {
+                    _this5.criteriaBinanceDatas = _this5.binanceDatas;
+                  }
+
                   console.log("API通信OK", res);
                 })["catch"](function (error) {
                   _this5.hanldeAjaxError(error);
@@ -6765,54 +6871,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, _callee2);
       }))();
     },
-    // APIからデータ取得
-    getDateTeiki: function getDateTeiki() {
-      var _this6 = this;
+    // 24時間の変動率色付け処理
+    priceChangePercentColor: function priceChangePercentColor(priceChangePercent) {
+      //　先頭の１文字を見て色わけをする
+      var str = String(priceChangePercent).slice(0, 1);
+      var colorFlg = true;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        var current_date;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                current_date = new Date();
-                _this6.date = moment__WEBPACK_IMPORTED_MODULE_1___default()(current_date).format("YYYY/MM/DD HH:mm");
+      if (str == "-") {
+        colorFlg = false;
+      }
 
-                _this6.getBinanceApi();
+      return colorFlg;
+    },
+    bidPriceGetData: function bidPriceGetData(symbol, str, current) {
+      //　基準日時点の価格を取得
+      var taget = this.criteriaBinanceDatas[str].find(function (data) {
+        return data.symbol === symbol;
+      }); //return taget.bidPrice;
 
-              case 3:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
+      var sum = (current - taget.bidPrice) / taget.bidPrice * 100;
+      return Math.round(sum * 100) / 100;
+    },
+    quoteVolumeGetData: function quoteVolumeGetData(symbol, str, current) {
+      //　基準日時点の出来高を取得
+      var taget = this.criteriaBinanceDatas[str].find(function (data) {
+        return data.symbol === symbol;
+      }); //return taget.quoteVolume;
+
+      var sum = (current - taget.quoteVolume) / taget.quoteVolume * 100;
+      return Math.round(sum * 100) / 100;
     }
-  }, "getBinanceApi", function getBinanceApi() {
-    var _this7 = this;
-
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.next = 2;
-              return axios.get("/api/crypto").then(function (res) {
-                _this7.binanceDatas = res.data; // console.log("API通信OK", res);
-              })["catch"](function (error) {
-                _this7.hanldeAjaxError(error);
-
-                console.log("エラー");
-              });
-
-            case 2:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4);
-    }))();
-  })
+  }
 });
 
 /***/ }),
@@ -6932,6 +7021,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Stady",
   data: function data() {
     return {
       email: null,
@@ -7543,6 +7633,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mixins: [_mixin__WEBPACK_IMPORTED_MODULE_1__["default"]],
+  name: "TaxCalculation",
   data: function data() {
     return {
       tax: {
@@ -8033,6 +8124,7 @@ __webpack_require__.r(__webpack_exports__);
    * この段階ではインスタンスはまだ完全に機能しています。
    *
    * **このフックはサーバサイドレンダリングでは呼ばれません。**(SSR:サーバーサイドでHTMLを返却する方法らしい)
+   * route遷移でも特にここは動かない（子コンポーネント内とかで動くんだと思う）
    */
   beforeDestroy: function beforeDestroy() {
     console.log("[LifeCycle] beforeDestroy. this.properties.message = ".concat(this.properties.message));
@@ -76317,7 +76409,7 @@ var render = function() {
                   attrs: { type: "button" },
                   on: {
                     click: function($event) {
-                      return _vm.getDate()
+                      return _vm.clickBinance()
                     }
                   }
                 },
@@ -76332,29 +76424,83 @@ var render = function() {
         ? _c("div", { staticClass: "form-group row" }, [
             _c("div", { staticClass: "col-12" }, [
               _c("div", { staticClass: "alert alert-info" }, [
-                _vm.sortBtcKey
-                  ? _c("span", { staticClass: "col-3" }, [
-                      _vm._v(
-                        "\n          " +
-                          _vm._s(_vm.sortKeyVal[_vm.sortBtcKey]) +
-                          ": " +
-                          _vm._s(_vm.sortUsdtAsc ? "昇順" : "降順") +
-                          "\n        "
-                      )
+                _c("div", { staticClass: "card-group" }, [
+                  _c("div", { staticClass: "card" }, [
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("p", { staticClass: "card-text" }, [
+                        _vm.sortBtcKey
+                          ? _c("span", [
+                              _vm._v(
+                                "\n                  " +
+                                  _vm._s(_vm.sortKeyVal[_vm.sortBtcKey]) +
+                                  ":\n                  " +
+                                  _vm._s(_vm.sortUsdtAsc ? "昇順" : "降順") +
+                                  "\n                "
+                              )
+                            ])
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("p", { staticClass: "card-text" }, [
+                        _vm.sortUsdtKey
+                          ? _c("span", [
+                              _c("label", { attrs: { for: "volumeBtc" } }, [
+                                _vm._v("出来高")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.volumeBtc,
+                                    expression: "volumeBtc"
+                                  }
+                                ],
+                                staticClass: "custom-range",
+                                attrs: {
+                                  type: "range",
+                                  min: "0",
+                                  max: "200",
+                                  step: "10",
+                                  id: "volumeBtc"
+                                },
+                                domProps: { value: _vm.volumeBtc },
+                                on: {
+                                  __r: function($event) {
+                                    _vm.volumeBtc = $event.target.value
+                                  }
+                                }
+                              }),
+                              _vm._v(
+                                "\n                  " +
+                                  _vm._s(_vm.volumeBtc) +
+                                  "\n                "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
                     ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.sortUsdtKey
-                  ? _c("span", { staticClass: "col-3" }, [
-                      _vm._v(
-                        "\n          " +
-                          _vm._s(_vm.sortKeyVal[_vm.sortBtcKey]) +
-                          ": " +
-                          _vm._s(_vm.sortUsdtAsc ? "昇順" : "降順") +
-                          "\n        "
-                      )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card" }, [
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("p", { staticClass: "card-text" }, [
+                        _vm.sortUsdtKey
+                          ? _c("span", [
+                              _vm._v(
+                                "\n                  " +
+                                  _vm._s(_vm.sortKeyVal[_vm.sortUsdtKey]) +
+                                  ":\n                  " +
+                                  _vm._s(_vm.sortUsdtAsc ? "昇順" : "降順") +
+                                  "\n                "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
                     ])
-                  : _vm._e()
+                  ])
+                ])
               ])
             ]),
             _vm._v(" "),
@@ -76421,13 +76567,57 @@ var render = function() {
                       [
                         _c("td", [_vm._v(_vm._s(binanceData.symbol))]),
                         _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            class: [
+                              _vm.priceChangePercentColor(
+                                binanceData.priceChangePercent
+                              ) === true
+                                ? "table-primary"
+                                : "table-danger"
+                            ]
+                          },
+                          [
+                            _vm._v(
+                              "\n              " +
+                                _vm._s(binanceData.priceChangePercent) +
+                                "%\n            "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
                         _c("td", [
-                          _vm._v(_vm._s(binanceData.priceChangePercent) + "%")
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(binanceData.bidPrice) +
+                              "(" +
+                              _vm._s(
+                                _vm.bidPriceGetData(
+                                  binanceData.symbol,
+                                  "BTC",
+                                  binanceData.bidPrice
+                                )
+                              ) +
+                              ")\n            "
+                          )
                         ]),
                         _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(binanceData.bidPrice))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(binanceData.quoteVolume))])
+                        _c("td", [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(binanceData.quoteVolume) +
+                              "(" +
+                              _vm._s(
+                                _vm.quoteVolumeGetData(
+                                  binanceData.symbol,
+                                  "BTC",
+                                  binanceData.quoteVolume
+                                )
+                              ) +
+                              ")\n            "
+                          )
+                        ])
                       ]
                     )
                   }),
@@ -76499,13 +76689,57 @@ var render = function() {
                       [
                         _c("td", [_vm._v(_vm._s(binanceData.symbol))]),
                         _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            class: [
+                              _vm.priceChangePercentColor(
+                                binanceData.priceChangePercent
+                              ) === true
+                                ? "table-primary"
+                                : "table-danger"
+                            ]
+                          },
+                          [
+                            _vm._v(
+                              "\n              " +
+                                _vm._s(binanceData.priceChangePercent) +
+                                "%\n            "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
                         _c("td", [
-                          _vm._v(_vm._s(binanceData.priceChangePercent) + "%")
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(binanceData.bidPrice) +
+                              "(" +
+                              _vm._s(
+                                _vm.bidPriceGetData(
+                                  binanceData.symbol,
+                                  "USDT",
+                                  binanceData.bidPrice
+                                )
+                              ) +
+                              ")\n            "
+                          )
                         ]),
                         _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(binanceData.bidPrice))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(binanceData.quoteVolume))])
+                        _c("td", [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(binanceData.quoteVolume) +
+                              "(" +
+                              _vm._s(
+                                _vm.quoteVolumeGetData(
+                                  binanceData.symbol,
+                                  "USDT",
+                                  binanceData.quoteVolume
+                                )
+                              ) +
+                              ")\n            "
+                          )
+                        ])
                       ]
                     )
                   }),
@@ -76514,7 +76748,8 @@ var render = function() {
               ])
             ])
           ])
-        : _vm._e()
+        : _vm._e(),
+      _vm._v("\n  " + _vm._s(_vm.filterSortUsdt) + "\n")
     ]
   )
 }
