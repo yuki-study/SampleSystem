@@ -12,8 +12,8 @@ const mix = require('laravel-mix');
  */
 
 mix.browserSync({
-   proxy: '0.0.0.0:8081', // アプリの起動アドレス
-   open: false // ブラウザを自動で開かない
+   proxy: 'http://127.0.0.1', // アプリの起動アドレス(webコンテナ)
+   open: true // ブラウザを自動で開く
 })
 
 

@@ -35,6 +35,9 @@ import Toasted from 'vue-toasted'
 Vue.use(Toasted)
 // トースター（エラーメッセージ表示などに使う） --end
 
+import SetInterval from './plugins/SetInterval'
+Vue.use(SetInterval)
+
 import App from './App.vue'
 
 // ルーティングの定義をインポートする

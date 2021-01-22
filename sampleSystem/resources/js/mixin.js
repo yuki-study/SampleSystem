@@ -38,7 +38,6 @@ export default {
         },
         // 共通成功メッセージ処理
         successMessage(message) {
-            console.log("test");
             let options = {
                 position: 'top-center',
                 duration: 5000,
@@ -46,6 +45,26 @@ export default {
             };
 
             this.$toasted.success(message, options);
-        }
+        },
+        // 共通注意メッセージ処理
+        infoMessage(message) {
+            let options = {
+                position: 'top-center',
+                duration: 5000,
+                fullWidth: true,
+            };
+
+            this.$toasted.info(message, options);
+        },
+        // 共通成功メッセージ処理
+        errorMessage(message) {
+            let options = {
+                position: 'top-center',
+                duration: 5000,
+                fullWidth: true,
+            };
+
+            this.$toasted.error(message, options);
+        },
     }
 }

@@ -2,8 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 // ページコンポーネントをインポートする
-import Main from './components/Main.vue'
+import Stady from './components/Stady.vue'
 import TaxCalculation from './components/TaxCalculation.vue'
+import Cryptocurrency from './components/Cryptocurrency.vue'
+import VueStudy from './components/VueStudy.vue'
 
 // VueRouterプラグインを使用する
 // これによって<RouterView />コンポーネントなどを使うことができる
@@ -13,12 +15,24 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        component: Main
+        component: Stady
     },
     {
         path: '/tax-calculation',
         component: TaxCalculation
-    }
+    },
+    {
+        path: '/cryptocurrency',
+        component: Cryptocurrency
+    },
+    {
+        path: '/vue-study',
+        component: VueStudy
+    },
+    {
+        path: '*',
+        component: Stady
+    },
 ]
 
 

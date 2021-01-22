@@ -20,5 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/tasks', 'TaskController@index');
 Route::get('/tax', 'TaxController@index');
 Route::get('/tax/{targetYear}/{patternFlg}', 'TaxController@show');
-
 Route::post('/tax', 'TaxController@store');
+
+
+Route::get('/crypto', 'CryptoController@getAllData');
