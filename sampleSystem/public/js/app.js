@@ -6731,13 +6731,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   created: function created() {
     this.$store.commit("setIsActive", 3);
   },
-  watch: {
-    $route: function $route(to, from) {
-      if (to.path !== from.path) {
-        console.log("clearInterval");
-        this.$clearInterval(this.intervalId); //ページ遷移時に定期処理を解除
-      }
-    }
+  watch: {// $route: function (to, from) {
+    //   if (to.path !== from.path) {
+    //     console.log("clearInterval");
+    //     this.$clearInterval(this.intervalId); //ページ遷移時に定期処理を解除
+    //   }
+    // },
   },
   computed: {
     filterSortBtc: function filterSortBtc() {
@@ -6794,8 +6793,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     sortBtc: function sortBtc(key) {
-      this.sortBtcKey === key ? this.sortUsdtAsc = !this.sortUsdtAsc : this.sortUsdtAsc = true;
-      this.sortUsdtKey = key;
+      this.sortBtcKey === key ? this.sortBtcAsc = !this.sortBtcAsc : this.sortBtcAsc = true;
+      this.sortBtcKey = key;
     },
     sortUsdt: function sortUsdt(key) {
       this.sortUsdtKey === key ? this.sortUsdtAsc = !this.sortUsdtAsc : this.sortUsdtAsc = true;
@@ -76434,7 +76433,7 @@ var render = function() {
                                 "\n                  " +
                                   _vm._s(_vm.sortKeyVal[_vm.sortBtcKey]) +
                                   ":\n                  " +
-                                  _vm._s(_vm.sortUsdtAsc ? "昇順" : "降順") +
+                                  _vm._s(_vm.sortBtcAsc ? "昇順" : "降順") +
                                   "\n                "
                               )
                             ])
@@ -76599,7 +76598,7 @@ var render = function() {
                                   binanceData.bidPrice
                                 )
                               ) +
-                              ")\n            "
+                              ")%\n            "
                           )
                         ]),
                         _vm._v(" "),
@@ -76615,7 +76614,7 @@ var render = function() {
                                   binanceData.quoteVolume
                                 )
                               ) +
-                              ")\n            "
+                              ")%\n            "
                           )
                         ])
                       ]
@@ -76721,7 +76720,7 @@ var render = function() {
                                   binanceData.bidPrice
                                 )
                               ) +
-                              ")\n            "
+                              ")%\n            "
                           )
                         ]),
                         _vm._v(" "),
@@ -76737,7 +76736,7 @@ var render = function() {
                                   binanceData.quoteVolume
                                 )
                               ) +
-                              ")\n            "
+                              ")%\n            "
                           )
                         ])
                       ]

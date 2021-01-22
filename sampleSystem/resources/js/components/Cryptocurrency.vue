@@ -35,7 +35,7 @@
                 <p class="card-text">
                   <span v-if="sortBtcKey">
                     {{ sortKeyVal[sortBtcKey] }}:
-                    {{ sortUsdtAsc ? "昇順" : "降順" }}
+                    {{ sortBtcAsc ? "昇順" : "降順" }}
                   </span>
                 </p>
                 <p class="card-text">
@@ -102,7 +102,7 @@
                     "BTC",
                     binanceData.bidPrice
                   )
-                }})
+                }})%
               </td>
               <td>
                 {{ binanceData.quoteVolume }}({{
@@ -111,7 +111,7 @@
                     "BTC",
                     binanceData.quoteVolume
                   )
-                }})
+                }})%
               </td>
             </tr>
           </tbody>
@@ -151,7 +151,7 @@
                     "USDT",
                     binanceData.bidPrice
                   )
-                }})
+                }})%
               </td>
               <td>
                 {{ binanceData.quoteVolume }}({{
@@ -160,7 +160,7 @@
                     "USDT",
                     binanceData.quoteVolume
                   )
-                }})
+                }})%
               </td>
             </tr>
           </tbody>
@@ -198,12 +198,12 @@ export default {
     this.$store.commit("setIsActive", 3);
   },
   watch: {
-    $route: function (to, from) {
-      if (to.path !== from.path) {
-        console.log("clearInterval");
-        this.$clearInterval(this.intervalId); //ページ遷移時に定期処理を解除
-      }
-    },
+    // $route: function (to, from) {
+    //   if (to.path !== from.path) {
+    //     console.log("clearInterval");
+    //     this.$clearInterval(this.intervalId); //ページ遷移時に定期処理を解除
+    //   }
+    // },
   },
   computed: {
     filterSortBtc: function () {
@@ -258,9 +258,9 @@ export default {
   methods: {
     sortBtc(key) {
       this.sortBtcKey === key
-        ? (this.sortUsdtAsc = !this.sortUsdtAsc)
-        : (this.sortUsdtAsc = true);
-      this.sortUsdtKey = key;
+        ? (this.sortBtcAsc = !this.sortBtcAsc)
+        : (this.sortBtcAsc = true);
+      this.sortBtcKey = key;
     },
     sortUsdt(key) {
       this.sortUsdtKey === key
