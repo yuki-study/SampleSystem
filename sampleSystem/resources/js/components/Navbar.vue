@@ -7,7 +7,7 @@
           <ul class="navbar-nav mr-auto">
             <li
               class="nav-item"
-              :class="{ active: isActive === '1' }"
+              :class="{ active: isActive === 1 }"
               @click="change('1')"
             >
               <router-link to="/" class="nav-link"
@@ -16,7 +16,7 @@
             </li>
             <li
               class="nav-item"
-              :class="{ active: isActive === '2' }"
+              :class="{ active: isActive === 2 }"
               @click="change('2')"
             >
               <router-link to="/tax-calculation" class="nav-link"
@@ -25,7 +25,7 @@
             </li>
             <li
               class="nav-item"
-              :class="{ active: isActive === '3' }"
+              :class="{ active: isActive === 3 }"
               @click="change('3')"
             >
               <router-link to="/cryptocurrency" class="nav-link"
@@ -34,7 +34,7 @@
             </li>
             <li
               class="nav-item"
-              :class="{ active: isActive === '4' }"
+              :class="{ active: isActive === 4 }"
               @click="change('4')"
             >
               <router-link to="/vue-study" class="nav-link"
@@ -50,15 +50,15 @@
 </template>
 
  <script>
+import { mapState } from "vuex";
+
 export default {
-  data() {
-    return {
-      isActive: "1",
-    };
+  computed: {
+    ...mapState(["isActive"]),
   },
   methods: {
     change: function (num) {
-      this.isActive = num;
+      this.$store.commit("setIsActive", num);
     },
   },
 };

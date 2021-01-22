@@ -622,6 +622,7 @@ export default {
     };
   },
   created() {
+    this.$store.commit("setIsActive", 2);
     // 選択年度の作成
     const year = new Date().getFullYear();
     const num = 10;

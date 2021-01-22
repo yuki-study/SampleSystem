@@ -38,6 +38,7 @@ export default {
    * しかしながら、マウンティングの段階は未開始で、`$el` プロパティはまだ利用できません。
    */
   created: function () {
+    this.$store.commit("setIsActive", 4);
     this.properties.message = "set value on created.";
     console.log(
       `[LifeCycle] created. this.properties.message = ${this.properties.message}`

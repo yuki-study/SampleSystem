@@ -106,7 +106,9 @@ export default {
     },
     intervalId: undefined,
   }),
-  created() {},
+  created() {
+    this.$store.commit("setIsActive", 3);
+  },
   watch: {
     $route: function (to, from) {
       if (to.path !== from.path) {

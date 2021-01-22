@@ -38,6 +38,8 @@ Vue.use(Toasted)
 import SetInterval from './plugins/SetInterval'
 Vue.use(SetInterval)
 
+import store from './store'
+
 import App from './App.vue'
 
 // ルーティングの定義をインポートする
@@ -46,6 +48,7 @@ import router from './router'
 const app = new Vue({
     el: '#app',
     router,
+    store,
     components: { App },
     template: '<App />'
 });

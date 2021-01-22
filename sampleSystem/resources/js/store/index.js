@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        isActive: "1"
+        isActive: 1
     },
     mutations: {
         setIsActive(state, isActive) {
@@ -28,4 +28,4 @@ export default new Vuex.Store({
             storage: window.sessionStorage
         }
     )]
-}
+});

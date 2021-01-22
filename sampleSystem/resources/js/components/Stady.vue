@@ -32,7 +32,9 @@ export default {
       email2: null,
     };
   },
-  created() {},
+  created() {
+    this.$store.commit("setIsActive", 1);
+  },
   mounted() {},
   methods: {},
 };
