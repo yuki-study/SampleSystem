@@ -93,4 +93,32 @@ class CryptoController extends Controller
 
         return false;
     }
+
+    /**
+     * 時価総額などデータを取得
+     * @return Cypto
+     */
+    public function getMarketCap()
+    {
+        $client = new Client();
+
+        $url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+
+        $headers = [
+            'X-CMC_PRO_API_KEY' => 'e1d3ec13-23d1-4da8-aa20-a374ae5ad3f9',
+            'Accept' => 'application/json',
+        ];
+
+        $response = $client->request(
+            'GET',
+            $url,
+            array('headers' => $headers)
+        );
+
+        $json = json_decode($response->getBody(), true);
+        // BTCを削除
+        unset($json['data']['0']);
+        
+        return $json;
+    }
 }

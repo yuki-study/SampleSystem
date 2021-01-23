@@ -24,3 +24,4 @@ Route::post('/tax', 'TaxController@store');
 
 
 Route::get('/crypto', 'CryptoController@getAllData');
+Route::get('/marketCap', 'CryptoController@getMarketCap');

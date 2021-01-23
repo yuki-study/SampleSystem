@@ -6,11 +6,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        isActive: 1
+        isActive: 1,
+        marketCap: null
     },
     mutations: {
         setIsActive(state, isActive) {
             state.isActive = isActive
+        },
+        setMarketCap(state, marketCap) {
+            state.marketCap = marketCap
         }
     },
     // `createPersistedState()`でインスタンス作成。引数に設定を書く
