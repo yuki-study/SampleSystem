@@ -46,7 +46,7 @@
                   </span>
                 </p>
                 <p class="card-text">
-                  <span v-if="sortUsdtKey">
+                  <span v-if="sortBtcKey">
                     <label for="volumeBtc">出来高</label>
                     <input
                       type="range"
@@ -62,20 +62,10 @@
                 </p>
               </div>
             </div>
-            <div class="card">
-              <div class="card-body">
-                <p class="card-text">
-                  <span v-if="sortUsdtKey">
-                    {{ sortKeyVal[sortUsdtKey] }}:
-                    {{ sortUsdtAsc ? "昇順" : "降順" }}
-                  </span>
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12">
         <table class="table table-sm">
           <thead class="thead-dark">
             <tr>
@@ -84,6 +74,11 @@
               <th @click="sortBtc('bidPrice')">価格</th>
               <th @click="sortBtc('quoteVolume')">出来高</th>
               <th>ランキング</th>
+              <th>追加日</th>
+              <th>USDT値段</th>
+              <th>1時間の変動率</th>
+              <th>24時間の変動率</th>
+              <th>7日間の変動率</th>
             </tr>
           </thead>
           <tbody>
@@ -142,83 +137,48 @@
                 }})%
               </td>
               <td>
-                {{ getRanking(binanceData.symbol) }}
+                <strong class="badge badge-success">{{
+                  getRanking(binanceData.symbol)
+                }}</strong>
               </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-6">
-        <table class="table table-sm">
-          <thead class="thead-dark">
-            <tr>
-              <th @click="sortUsdt('symbol')">通貨</th>
-              <th @click="sortUsdt('priceChangePercent')">24時間の変動率(%)</th>
-              <th @click="sortUsdt('bidPrice')">価格</th>
-              <th @click="sortUsdt('quoteVolume')">出来高</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="micro"
-              v-for="binanceData in filterSortUsdt"
-              :key="binanceData.symbol"
-            >
-              <td>{{ binanceData.symbol }}</td>
+              <td>
+                {{ getDateAdd(binanceData.symbol) }}
+              </td>
+              <td>
+                {{ getUsdtPrice(binanceData.symbol) }}
+              </td>
               <td
                 :class="[
-                  priceChangePercentColor(binanceData.priceChangePercent) ===
-                  true
+                  getColorChange1h(binanceData.symbol) === true
                     ? 'table-primary'
                     : 'table-danger',
                 ]"
               >
-                {{ binanceData.priceChangePercent }}%
+                {{ getUsdtChange1h(binanceData.symbol) }}
               </td>
               <td
                 :class="[
-                  bidPriceColor(
-                    binanceData.symbol,
-                    'USDT',
-                    binanceData.bidPrice
-                  ) === true
+                  getColorChange24h(binanceData.symbol) === true
                     ? 'table-primary'
                     : 'table-danger',
                 ]"
               >
-                {{ binanceData.bidPrice }}({{
-                  bidPriceGetData(
-                    binanceData.symbol,
-                    "USDT",
-                    binanceData.bidPrice
-                  )
-                }})%
+                {{ getUsdtChange24h(binanceData.symbol) }}
               </td>
               <td
                 :class="[
-                  quoteVolumeColor(
-                    binanceData.symbol,
-                    'USDT',
-                    binanceData.quoteVolume
-                  ) === true
+                  getColorChange7d(binanceData.symbol) === true
                     ? 'table-primary'
                     : 'table-danger',
                 ]"
               >
-                {{ binanceData.quoteVolume }}({{
-                  quoteVolumeGetData(
-                    binanceData.symbol,
-                    "USDT",
-                    binanceData.quoteVolume
-                  )
-                }})%
+                {{ getUsdtChange7d(binanceData.symbol) }}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    {{ marketCap }}
   </div>
 </template>
 
@@ -234,9 +194,7 @@ export default {
     errors: [],
     date: null,
     sortBtcKey: "priceChangePercent", // 24時間の変動率
-    sortUsdtKey: "priceChangePercent", // 24時間の変動率
     sortBtcAsc: false,
-    sortUsdtAsc: false,
     sortKeyVal: {
       symbol: "通貨",
       priceChangePercent: "24時間の変動率(%)",
@@ -290,28 +248,6 @@ export default {
       }
       return [];
     },
-    filterSortUsdt: function () {
-      if (this.binanceDatas["USDT"]) {
-        var data = this.binanceDatas["USDT"];
-
-        // ソート処理
-        if (this.sortUsdtKey) {
-          let set = 1;
-          this.sortUsdtAsc ? (set = 1) : (set = -1);
-          // 非同期通信なので入ってからソート実施
-          if (data) {
-            data.sort((a, b) => {
-              if (a[this.sortUsdtKey] < b[this.sortUsdtKey]) return -1 * set;
-              if (a[this.sortUsdtKey] > b[this.sortUsdtKey]) return 1 * set;
-              return 0;
-            });
-          }
-        }
-
-        return data;
-      }
-      return [];
-    },
   },
   methods: {
     sortBtc(key) {
@@ -319,12 +255,6 @@ export default {
         ? (this.sortBtcAsc = !this.sortBtcAsc)
         : (this.sortBtcAsc = true);
       this.sortBtcKey = key;
-    },
-    sortUsdt(key) {
-      this.sortUsdtKey === key
-        ? (this.sortUsdtAsc = !this.sortUsdtAsc)
-        : (this.sortUsdtAsc = true);
-      this.sortUsdtKey = key;
     },
     clickBinance() {
       this.$clearInterval(this.intervalId); //ページ遷移時に定期処理を解除
@@ -354,7 +284,7 @@ export default {
           if (this.criteriaBinanceDatas === null) {
             this.criteriaBinanceDatas = this.binanceDatas;
           }
-          console.log("API通信OK", res);
+          console.log("API通信OK");
         })
         .catch((error) => {
           this.hanldeAjaxError(error);
@@ -420,21 +350,122 @@ export default {
         .get(`/api/marketCap`)
         .then((res) => {
           this.$store.commit("setMarketCap", res.data.data);
-          console.log("API通信OK", res);
+          console.log("API通信OK");
         })
         .catch((error) => {
           this.hanldeAjaxError(error);
           console.log("エラー");
         });
     },
-    getRanking: function (symbol) {
+    // マーケットキャップデータより表示されているコインのデータを取得して返却
+    getMarketCapFilter: function (symbol) {
       //　基準日時点の出来高を取得
       let taget = this.$store.state.marketCap.find((data) => {
-        if (data.symbol.indexOf(symbol) > -1) {
+        if (symbol.indexOf(data.symbol) > -1) {
           return data;
         }
       });
+
+      return taget;
+    },
+    // ランキングデータを返却
+    getRanking: function (symbol) {
+      //　基準日時点の出来高を取得
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return "外";
+      }
       return taget.cmc_rank;
+    },
+    // 追加日を返却
+    getDateAdd: function (symbol) {
+      //　基準日時点の出来高を取得
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return "不明";
+      }
+      return moment(taget.date_added).format("YYYY/MM/DD");
+    },
+    // USDTの値段
+    getUsdtPrice: function (symbol) {
+      //　基準日時点の出来高を取得
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return "不明";
+      }
+      return taget.quote.USD.price;
+    },
+    // USDTの1時間での変動値
+    getUsdtChange1h: function (symbol) {
+      //　基準日時点の出来高を取得
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return "不明";
+      }
+      return taget.quote.USD.percent_change_1h;
+    },
+    // USDTの24時間での変動値
+    getUsdtChange24h: function (symbol) {
+      //　基準日時点の出来高を取得
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return "不明";
+      }
+      return taget.quote.USD.percent_change_24h;
+    },
+    // USDTの7日間での変動値
+    getUsdtChange7d: function (symbol) {
+      //　基準日時点の出来高を取得
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return "不明";
+      }
+      return taget.quote.USD.percent_change_7d;
+    },
+    // カラーフラグを返却
+    getColorFlg: function (val) {
+      let str = String(val).slice(0, 1);
+      let colorFlg = true;
+      if (str == "-") {
+        colorFlg = false;
+      }
+      return colorFlg;
+    },
+    // USDTの1時間のカラー状態を返却
+    getColorChange1h: function (symbol) {
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return false;
+      }
+
+      return this.getColorFlg(taget.quote.USD.percent_change_1h);
+    },
+    // USDTの24時間のカラー状態を返却
+    getColorChange24h: function (symbol) {
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return false;
+      }
+
+      return this.getColorFlg(taget.quote.USD.percent_change_24h);
+    },
+    // USDTの7日間のカラー状態を返却
+    getColorChange7d: function (symbol) {
+      let taget = this.getMarketCapFilter(symbol);
+
+      if (!taget) {
+        return false;
+      }
+
+      return this.getColorFlg(taget.quote.USD.percent_change_7d);
     },
   },
 };

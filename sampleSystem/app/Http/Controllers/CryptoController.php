@@ -43,15 +43,6 @@ class CryptoController extends Controller
                 }
                 $value['symbolKey'] = "BTC";
                 array_push($resonseJson["BTC"], self::processing($value));
-            } elseif (substr($value['symbol'], -4) == "USDT") {
-                if (self::checkPrice($value)) {
-                    continue;
-                } else if (strpos($value['symbol'], 'DOWN') !== false) {
-                    // USDT建てのDOWN系を排除
-                    continue;
-                }
-                $value['symbolKey'] = "USDT";
-                array_push($resonseJson["USDT"], self::processing($value));
             }
         }
 
@@ -109,16 +100,29 @@ class CryptoController extends Controller
             'Accept' => 'application/json',
         ];
 
+        $params = ['limit' => 300];
+
+        $options = ['query' => $params, 'headers' => $headers];
+
         $response = $client->request(
             'GET',
             $url,
-            array('headers' => $headers)
+            $options
         );
 
         $json = json_decode($response->getBody(), true);
         // BTCを削除
-        unset($json['data']['0']);
-        
-        return $json;
+        $resonseJson = [
+            "data" => []
+        ];
+        foreach ($json["data"] as $key => $value) {
+            if ($value['symbol'] == "BTC") {
+                continue;
+            } else {
+                array_push($resonseJson["data"], $value);
+            }
+        }
+
+        return $resonseJson;
     }
 }
